@@ -69,8 +69,29 @@ python3 -m http.server 8080 --directory composeApp/build/dist/wasmJs/productionE
 
 Otwórz http://localhost:8080 — nie otwieraj `index.html` przez `file://`.
 Paczka nadaje się do hostingu statycznego z obsługą plików `.wasm` (`application/wasm`),
-JS i pozostałych zasobów. Publikacja na publicznym hostingu nie jest częścią tego kroku.
+JS i pozostałych zasobów.
 CI w GitHub Actions wykonuje testy logiki i buduje paczkę webową jako artefakt `family-app-web`.
+
+## Publikacja przez GitHub Pages
+
+Docelowy adres demo: **https://abuspl.github.io/Family-App/**.
+
+Jednorazowo w repozytorium wybierz **Settings → Pages → Build and deployment →
+Source: GitHub Actions**. Wymaga to uprawnień administratora repozytorium.
+Nie ustawiaj publikacji bezpośrednio z plików źródłowych Kotlin.
+
+Workflow `.github/workflows/build.yml` po każdym pushu do `main` wykonuje testy,
+buduje wersję webową i publikuje ją w GitHub Pages. Pull requesty przechodzą
+testy i kompilację, ale nie publikują strony. Możesz też uruchomić workflow ręcznie
+przez **Actions → Build, test and publish → Run workflow** (gałąź `main`).
+
+Status i wynik publikacji znajdziesz w zadaniu `deploy` w GitHub Actions.
+Jeżeli etap „Configure GitHub Pages” zgłasza „Not Found”, sprawdź powyższe
+ustawienie Source i ponów nieudane zadanie. Udany build sam w sobie nie oznacza,
+że strona została opublikowana.
+
+Strona jest publicznym demo. Nie używaj prawdziwych danych rodziny;
+logowanie i punkty nadal działają wyłącznie w pamięci bieżącej karty.
 
 ## Kolejne etapy
 
@@ -83,7 +104,8 @@ CI w GitHub Actions wykonuje testy logiki i buduje paczkę webową jako artefakt
    przed wielokrotnym naliczaniem. Ustalić zasady przeliczenia na nagrody.
 4. Sprawdzić web na telefonach, dostępność, obsługę klawiatury i testy UI.
 5. Dodać targety Android/iOS do modułów KMP i natywne punkty startowe.
-6. Skonfigurować środowiska i hosting; wcześniej zastąpić logowanie demo prawdziwym.
+6. Przygotować hosting backendu i środowiska do prawdziwego użycia przez rodzinę;
+   zastąpić logowanie demo prawdziwym i dodać trwały zapis danych.
 
 ## Dokumentacja technologii
 
