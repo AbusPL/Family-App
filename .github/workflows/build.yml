@@ -1,4 +1,4 @@
-name: Build and test
+name: Build, test and publish
 on:
   push:
     branches: [main]
@@ -24,3 +24,28 @@ jobs:
           name: family-app-web
           path: composeApp/build/dist/wasmJs/productionExecutable/
           if-no-files-found: error
+      - name: Package GitHub Pages site
+        if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: composeApp/build/dist/wasmJs/productionExecutable/
+  deploy:
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+    needs: web
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      pages: write
+      id-token: write
+    concurrency:
+      group: github-pages
+      cancel-in-progress: false
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5
+      - name: Publish GitHub Pages site
+        id: deployment
+        uses: actions/deploy-pages@v4
